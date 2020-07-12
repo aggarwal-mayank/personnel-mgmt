@@ -16,6 +16,13 @@ spring:
   cache:
     jcache:
       config: classpath:ehcache.xml
+management:
+  endpoints:
+    enabled-by-default: false
+  endpoint:
+    health:
+      enabled: true
+      show-details: always
 employee:
   data:
     file: classPath:employee.csv
