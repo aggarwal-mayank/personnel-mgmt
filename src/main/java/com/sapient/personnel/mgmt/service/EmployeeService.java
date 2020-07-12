@@ -15,6 +15,8 @@ public interface EmployeeService {
 
     List<Employee> findAllByPlace(Place place);
 
+    List<Employee> saveAll(List<Employee> employees, Place place);
+
     List<Employee> updateSalaryByPercentageForPlace(Place place, BigDecimal percent);
 
     List<Employee> findAllSuperviseesOfSupervisor(Long supervisorId) throws EmployeeNotFoundException;

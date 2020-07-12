@@ -41,7 +41,9 @@ public class EmployeeController {
 
     @PutMapping(value = "/places/{place}/salaries/percentage/{percent}", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Employee> updateSalaryByPercentageForPlace(@PathVariable Place place, @PathVariable BigDecimal percent) {
-        return employeeService.updateSalaryByPercentageForPlace(place, percent);
+        final List<Employee> employees = employeeService.updateSalaryByPercentageForPlace(place, percent);
+        employeeService.saveAll(employees, place);
+        return employees;
     }
 
     @GetMapping(value = "/supervisees/{id}", produces = MediaType.APPLICATION_JSON_VALUE)

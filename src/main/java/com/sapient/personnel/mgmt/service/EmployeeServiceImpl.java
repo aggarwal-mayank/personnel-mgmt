@@ -4,6 +4,7 @@ import com.sapient.personnel.mgmt.domain.Employee;
 import com.sapient.personnel.mgmt.domain.EmployeeNotFoundException;
 import com.sapient.personnel.mgmt.domain.Place;
 import com.sapient.personnel.mgmt.repo.EmployeeRepo;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -34,20 +35,22 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    @Cacheable(value = "employees")
+    @Cacheable(value = "employeeList", key = "#place")
     public List<Employee> findAllByPlace(Place place) {
         return employeeRepo.findAllByPlace(place);
     }
 
     @Override
     public List<Employee> updateSalaryByPercentageForPlace(Place place, BigDecimal percent) {
-        final List<Employee> employees = employeeRepo.findAllByPlace(place).stream()
+        return employeeRepo.findAllByPlace(place).stream()
                 .parallel()
-                .map(employee -> {
-                    employee.setSalary(Utils.incrementByPercentage(employee.getSalary(), percent));
-                    return employee;
-                })
+                .map(employee -> updateSalary(employee, percent))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    @CachePut(value = "employeeList", key = "#place")
+    public List<Employee> saveAll(List<Employee> employees, Place place) {
         employeeRepo.saveAll(employees);
         return employees;
     }
@@ -56,5 +59,10 @@ public class EmployeeServiceImpl implements EmployeeService {
     public List<Employee> findAllSuperviseesOfSupervisor(Long supervisorId) throws EmployeeNotFoundException {
         return employeeRepo.findAllSuperviseesOfSupervisor(findById(supervisorId).getId());
 
+    }
+
+    public Employee updateSalary(Employee employee, BigDecimal percent) {
+        employee.setSalary(Utils.incrementByPercentage(employee.getSalary(), percent));
+        return employee;
     }
 }

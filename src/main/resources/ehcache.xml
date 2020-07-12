@@ -10,7 +10,7 @@
     <!-- Default cache template -->
     <cache-template name="default">
         <expiry>
-            <ttl unit="minutes">5</ttl>
+            <ttl unit="seconds">30</ttl>
         </expiry>
 
         <listeners>
@@ -32,12 +32,7 @@
     </cache-template>
 
     <!-- Cache configurations -->
-    <cache alias="employeeCache" uses-template="default">
-        <key-type>java.lang.Long</key-type>
-        <value-type>com.sapient.personnel.mgmt.domain.Employee</value-type>
-    </cache>
-
-    <cache alias="employees" uses-template="default">
+    <cache alias="employeeList" uses-template="default">
         <key-type>com.sapient.personnel.mgmt.domain.Place</key-type>
         <value-type>java.util.List</value-type>
     </cache>
