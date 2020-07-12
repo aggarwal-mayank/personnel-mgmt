@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    hikari:
+      driver-class-name: org.h2.Driver
+      jdbc-url: jdbc:h2:mem:testdb
+      username: sa
+      password:
+      maximum-pool-size: 5
+      connection-test-query: "SELECT 1"
+      pool-name: dbPool
+  h2:
+    console:
+      enabled: true
+  jpa:
+    show-sql: true
+  cache:
+    jcache:
+      config: classpath:ehcache.xml
+employee:
+  data:
+    file: classPath:employee.csv
+    chunk: 5

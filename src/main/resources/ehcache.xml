@@ -1,0 +1,45 @@
+<config
+        xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+        xmlns='http://www.ehcache.org/v3'
+        xsi:schemaLocation="http://www.ehcache.org/v3
+            http://www.ehcache.org/schema/ehcache-core-3.7.xsd">
+
+    <!-- Persistent cache directory -->
+    <persistence directory="cache" />
+
+    <!-- Default cache template -->
+    <cache-template name="default">
+        <expiry>
+            <ttl unit="minutes">5</ttl>
+        </expiry>
+
+        <listeners>
+            <listener>
+                <class>com.sapient.personnel.mgmt.config.CacheLogger</class>
+                <event-firing-mode>ASYNCHRONOUS</event-firing-mode>
+                <event-ordering-mode>UNORDERED</event-ordering-mode>
+                <events-to-fire-on>CREATED</events-to-fire-on>
+                <events-to-fire-on>EXPIRED</events-to-fire-on>
+                <events-to-fire-on>EVICTED</events-to-fire-on>
+            </listener>
+        </listeners>
+
+        <resources>
+            <heap>1000</heap>
+            <offheap unit="MB">10</offheap>
+            <disk persistent="true" unit="MB">20</disk>
+        </resources>
+    </cache-template>
+
+    <!-- Cache configurations -->
+    <cache alias="employeeCache" uses-template="default">
+        <key-type>java.lang.Long</key-type>
+        <value-type>com.sapient.personnel.mgmt.domain.Employee</value-type>
+    </cache>
+
+    <cache alias="employees" uses-template="default">
+        <key-type>com.sapient.personnel.mgmt.domain.Place</key-type>
+        <value-type>java.util.List</value-type>
+    </cache>
+
+</config>
